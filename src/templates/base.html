@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Painel Acadêmico{% endblock %}</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+    <link rel="stylesheet" href="assets/chart-page.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    {% block scripts %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+    <header class="{% block header_class %}page-header{% endblock %}">
+        {% block header_content %}
+        <div class="container header-grid">
+            <div class="header-column header-title">
+                <h1>Painel Acadêmico</h1>
+            </div>
+        </div>
+        {% endblock %}
+    </header>
+    <main class="{% block main_class %}container{% endblock %}">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="page-footer">
+        <div class="container">
+            <p>Atualizado a partir do SUAP.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

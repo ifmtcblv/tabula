@@ -1,0 +1,6 @@
+# Dependências de produção para Docker/CI
+# Gerado a partir de pyproject.toml
+pandas
+xlrd
+openpyxl
+Jinja2

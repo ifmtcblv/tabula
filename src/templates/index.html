@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Painel Acadêmico{% endblock %}
+{% block body_class %}full-width{% endblock %}
+
+{% block header_content %}
+<div class="container header-grid">
+    <div class="header-column header-title">
+        <h1>Painel Acadêmico</h1>
+    </div>
+    <div class="header-column header-text">
+        <p>Visualize indicadores básicos sobre situação, permanência e inclusão dos estudantes.</p>
+    </div>
+</div>
+<div class="header-note-wrapper">
+    <p class="header-note">⚠️ Dados do painel em validação.</p>
+</div>
+{% endblock %}
+
+{% block content %}
+{% for section_key, section_title in sections.items() %}
+{% set items = configs | selectattr("section", "equalto", section_key) | list %}
+{% if items %}
+<section aria-labelledby="sec-{{ section_key }}">
+    <h2 id="sec-{{ section_key }}">{{ section_title }}</h2>
+    <div class="card-grid">
+        {% for item in items %}
+        <article class="card">
+            <h3 aria-level="3" role="heading">
+                <a class="chart-link" href="{{ item.key }}.html">{{ item.title }}</a>
+            </h3>
+            <div class="chart-wrapper">
+                <canvas aria-label="{{ item.aria_label }}" id="{{ item.canvas_id }}" role="img"></canvas>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endfor %}
+{% endblock %}
+
+{% block scripts %}
+<script src="js/main.js" type="module"></script>
+{% endblock %}
