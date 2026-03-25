@@ -50,25 +50,38 @@ Lê o export oficial do SUAP (`data/master.xls`), gera agregados em CSV e public
 
 ## Datasets gerados (quando os campos existem em `master.xls`)
 
+**Visão geral**
 - `alunos_por_situacao.csv`
 - `modalidade.csv`
 - `dist_percentual_progresso.csv`
 - `turno.csv`
+
+**Inclusão & Acesso**
 - `forma_ingresso.csv`
-- `cota_mec.csv`
-- `cota_sistec.csv`
+- `cota_mec.csv` / `cota_sistec.csv` / `cotas.csv`
 - `etnia_raca.csv`
 - `necessidades_especiais.csv`
 - `tipo_escola_origem.csv`
 - `natureza_participacao.csv`
 - `transporte_tipo.csv`
 
-> Colunas ausentes são ignoradas, portanto o dataset correspondente não é criado.
+**Análises cruzadas**
+- `natureza_escola.csv` — Natureza de Participação × Tipo de Escola de Origem
+- `situacao_escola.csv` — Situação × Tipo de Escola de Origem
+- `campus_natureza.csv` — Campus × Natureza de Participação
+- `natureza_turno.csv` — Natureza de Participação × Turno
+- `natureza_situacao.csv` — Natureza de Participação × Situação
+- `natureza_coorte.csv` — Evolução de matrículas por Natureza de Participação ao longo dos anos
+
+**Metadados**
+- `meta.json` — data/hora da última importação (exibida no rodapé do painel)
+
+> Colunas ausentes são ignoradas e o dataset correspondente não é criado.
 
 ## Estrutura principal
 
 - `data/`: arquivo fonte exportado do SUAP (`master.xls`).
-- `run/construir_datasets.py`: normaliza nomes de colunas (case/acento), trata datas/percentuais e gera os agregados em `web/datasets/`.
+- `run/construir_datasets.py`: normaliza nomes de colunas (case/acento), trata datas/percentuais, gera os agregados em `web/datasets/` e registra a data de importação em `web/datasets/meta.json`.
 - `run/gerar_site.py`: copia estáticos e gera o `web/index.html`.
 - `src/`: módulos Python (construtores de datasets, utilitários, templates).
 - `web/`: HTML/CSS/JS (Chart.js) consumindo os CSVs via `fetch`.
