@@ -18,6 +18,22 @@
 {% endblock %}
 
 {% block content %}
+<div class="kpi-bar">
+  <div class="kpi-card kpi-total">
+    <span class="kpi-label">Total de Alunos</span>
+    <span class="kpi-value" id="kpiTotal">—</span>
+  </div>
+  <div class="kpi-card kpi-presencial">
+    <span class="kpi-label">Presencial</span>
+    <span class="kpi-value" id="kpiPresencial">—</span>
+    <span class="kpi-pct" id="kpiPresencialPct">—</span>
+  </div>
+  <div class="kpi-card kpi-ead">
+    <span class="kpi-label">A Distância (EAD)</span>
+    <span class="kpi-value" id="kpiEAD">—</span>
+    <span class="kpi-pct" id="kpiEADPct">—</span>
+  </div>
+</div>
 {% for section_key, section_title in sections.items() %}
 {% set items = configs | selectattr("section", "equalto", section_key) | list %}
 {% if items %}
@@ -42,4 +58,5 @@
 
 {% block scripts %}
 <script src="js/main.js" type="module"></script>
+<script src="js/kpi.js" type="module"></script>
 {% endblock %}

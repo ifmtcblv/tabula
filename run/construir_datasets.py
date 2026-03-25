@@ -3,6 +3,7 @@
 
 import argparse
 import importlib
+import json
 import math
 import re
 import sys
@@ -311,6 +312,13 @@ def construir_datasets(caminho_entrada: Path, diretorio_saida: Path) -> None:
             continue
         escrever_csv(gerado, diretorio_saida / nome_arquivo)
         logger.info(f"Gerado: {nome_arquivo}")
+
+    # Registra data/hora da importação para exibição no painel
+    meta = {"atualizado_em": datetime.now().strftime("%d/%m/%Y %H:%M")}
+    (diretorio_saida / "meta.json").write_text(
+        json.dumps(meta, ensure_ascii=False), encoding="utf-8"
+    )
+    logger.info("Gerado: meta.json")
 
 
 def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:

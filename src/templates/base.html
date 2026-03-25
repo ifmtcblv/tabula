@@ -26,9 +26,20 @@
     </main>
     <footer class="page-footer">
         <div class="container">
-            <p>Atualizado a partir do SUAP.</p>
+            <p id="footer-atualizacao">Atualizado a partir do SUAP.</p>
         </div>
     </footer>
+    <script type="module">
+        fetch('datasets/meta.json')
+            .then(r => r.json())
+            .then(data => {
+                if (data.atualizado_em) {
+                    document.getElementById('footer-atualizacao').textContent +=
+                        ' Dados de ' + data.atualizado_em + '.';
+                }
+            })
+            .catch(() => {});
+    </script>
 </body>
 
 </html>

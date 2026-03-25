@@ -12,6 +12,7 @@
 
 {% block content %}
 <div class="chart-controls">
+{% if switchable %}<button id="switchGroup" type="button">⇄ Inverter agrupamento</button>{% endif %}
 </div>
 <div class="single-chart-container">
     <canvas id="{{ canvas_id }}" aria-live="polite"></canvas>

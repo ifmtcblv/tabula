@@ -184,6 +184,52 @@ body.full-width {
   color: #cbd5f5;
 }
 
+.kpi-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.kpi-card {
+  background: var(--surface-color);
+  border-radius: 14px;
+  padding: 1.25rem 1.75rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 1 180px;
+}
+
+.kpi-card.kpi-presencial {
+  border-left: 4px solid var(--primary-color);
+}
+
+.kpi-label {
+  font-size: 0.85rem;
+  color: var(--muted-color);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kpi-value {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1.1;
+}
+
+.kpi-presencial .kpi-value {
+  color: var(--primary-color);
+}
+
+.kpi-pct {
+  font-size: 0.9rem;
+  color: var(--muted-color);
+}
+
 @media (max-width: 768px) {
   .page-header {
     padding: 2.5rem 0 2rem;
