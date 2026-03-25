@@ -141,26 +141,6 @@ def parse_ano(valor: object, data_fallback: Optional[pd.Timestamp]) -> Optional[
     return None
 
 
-def tem_necessidade_especial(valor: Union[str, None]) -> str:
-    normalizado = normalizar_texto(valor)
-    if not normalizado:
-        return "Não"
-    marcadores_negativos = {
-        "nao",
-        "naopossui",
-        "naoseaplica",
-        "naodeclarado",
-        "naoinformado",
-        "sem",
-        "0",
-    }
-    if any(normalizado.startswith(marcador) for marcador in marcadores_negativos):
-        return "Não"
-    if normalizado in {"n", "na"}:
-        return "Não"
-    return "Sim"
-
-
 def meses_entre(inicio: Optional[pd.Timestamp], fim: Optional[pd.Timestamp]) -> float:
     if inicio is None or pd.isna(inicio) or fim is None or pd.isna(fim):
         return math.nan
@@ -205,11 +185,6 @@ def pre_processar(df: pd.DataFrame) -> Tuple[pd.DataFrame, set]:
 
     df["percentual_progresso_num"] = df["percentual_progresso"].apply(parse_percentual)
     df["bucket_progresso"] = df["percentual_progresso_num"].apply(bucketize_progresso)
-
-    if "necessidades_especiais" in fontes_disponiveis:
-        df["tem_ne"] = df["necessidades_especiais"].apply(tem_necessidade_especial)
-    else:
-        df["tem_ne"] = pd.NA
 
     hoje = pd.Timestamp(datetime.today().date())
     df["tempo_curso_meses"] = df.apply(

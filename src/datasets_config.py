@@ -47,10 +47,6 @@ SINONIMOS_COLUNAS: Dict[str, List[str]] = {
         "Raca/Cor",
         "Raça/Cor",
     ],
-    "necessidades_especiais": [
-        "Deficiências/Transtornos/Superdotação",
-        "Necessidades Especiais",
-    ],
     "frequencia_periodo": [
         "Frequência no Período",
         "Frequencia no Periodo",
@@ -193,20 +189,6 @@ ESPECS_SAIDA: Dict[str, Dict] = {
             "module": "./charts/etnia.js",
             "function": "renderEtniaChart",
             "aria_label": "Distribuição de alunos por etnia ou raça",
-        },
-    },
-    "necessidades_especiais.csv": {
-        "builder": "necessidades_especiais",
-        "requires": ["tem_ne"],
-        "sources_all": ["necessidades_especiais"],
-        "frontend": {
-            "title": "Necessidades Especiais",
-            "key": "necessidades",
-            "section": "inclusao",
-            "canvas_id": "chartNecessidades",
-            "module": "./charts/necessidades.js",
-            "function": "renderNecessidadesChart",
-            "aria_label": "Alunos com e sem necessidades especiais",
         },
     },
     "tipo_escola_origem.csv": {
