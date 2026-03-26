@@ -31,19 +31,25 @@ export async function renderEtniaChart() {
     return;
   }
 
-  const labels = rows
-    .map((row) => row.Etnia_Raca || row.etnia_raca || 'Não informado')
-    .filter((value) => value && value.length > 0);
-  const values = rows.map((row) => Number(row.qtd || row.Qtd || 0) || 0);
-  const total = values.reduce((sum, value) => sum + value, 0);
+  const items = rows
+    .map((row) => ({
+      label: row.Etnia_Raca || row.etnia_raca || 'Não informado',
+      value: Number(row.qtd || row.Qtd || 0) || 0,
+    }))
+    .filter((item) => item.label && item.label.length > 0)
+    .sort((a, b) => b.value - a.value);
 
-  if (!labels.length) {
+  if (!items.length) {
     renderPlaceholder(canvas, 'Categorias de etnia não informadas.');
     return;
   }
 
+  const total = items.reduce((sum, item) => sum + item.value, 0);
+  const labels = items.map((item) => item.label);
+  const values = items.map((item) => item.value);
+
   new Chart(canvas.getContext('2d'), {
-    type: 'doughnut',
+    type: 'bar',
     data: {
       labels,
       datasets: [
@@ -58,14 +64,23 @@ export async function renderEtniaChart() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      indexAxis: 'y',
+      scales: {
+        x: {
+          beginAtZero: true,
+          title: { display: true, text: 'Quantidade de Alunos' },
+          ticks: { callback: (value) => numberFormatter.format(value) },
+        },
+        y: { title: { display: true, text: 'Etnia/Raça' } },
+      },
       plugins: {
-        legend: { position: 'bottom' },
+        legend: { display: false },
         tooltip: {
           callbacks: {
             label(context) {
-              const value = context.parsed || 0;
+              const value = context.parsed.x ?? 0;
               const pct = percentage(value, total);
-              return `${context.label}: ${numberFormatter.format(value)} (${percentFormatter.format(pct)}%)`;
+              return `${numberFormatter.format(value)} alunos (${percentFormatter.format(pct)}%)`;
             },
           },
         },
