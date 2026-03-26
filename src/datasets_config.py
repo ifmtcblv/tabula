@@ -266,21 +266,7 @@ ESPECS_SAIDA: Dict[str, Dict] = {
             "switchable": True,
         },
     },
-    "campus_natureza.csv": {
-        "builder": "campus_natureza",
-        "requires": ["campus", "natureza_participacao"],
-        "sources_all": ["campus", "natureza_participacao"],
-        "frontend": {
-            "title": "Alunos por Campus",
-            "key": "campus_natureza",
-            "section": "cruzadas",
-            "canvas_id": "chartCampusNatureza",
-            "module": "./charts/campus_natureza.js",
-            "function": "renderCampusNaturezaChart",
-            "aria_label": "Distribuição de alunos por campus e natureza de participação",
-            "switchable": True,
-        },
-    },
+
     "natureza_turno.csv": {
         "builder": "natureza_turno",
         "requires": ["natureza_participacao", "turno"],
@@ -312,19 +298,20 @@ ESPECS_SAIDA: Dict[str, Dict] = {
             "switchable": True,
         },
     },
-    "natureza_coorte.csv": {
-        "builder": "natureza_coorte",
-        "requires": ["natureza_participacao", "coorte_ano"],
+    "tempo_instituicao.csv": {
+        "builder": "tempo_instituicao",
+        "requires": ["tempo_curso_meses", "status_simplificado"],
         "sources_all": ["natureza_participacao"],
-        "sources_any": [["ano_ingresso", "data_matricula"]],
+        "sources_any": [["data_matricula"]],
         "frontend": {
-            "title": "Evolução por Natureza",
-            "key": "natureza_coorte",
+            "title": "Tempo na Instituição",
+            "key": "tempo_instituicao",
             "section": "cruzadas",
-            "canvas_id": "chartNaturezaCoorte",
-            "module": "./charts/natureza_coorte.js",
-            "function": "renderNaturezaCoorteChart",
-            "aria_label": "Evolução do número de alunos por natureza de participação ao longo dos anos",
+            "canvas_id": "chartTempoInstituicao",
+            "module": "./charts/tempo_instituicao.js",
+            "function": "renderTempoInstituicaoChart",
+            "aria_label": "Distribuição de alunos matriculados por tempo de permanência na instituição",
+            "switchable": True,
         },
     },
 }
