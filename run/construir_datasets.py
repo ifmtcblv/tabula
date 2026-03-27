@@ -251,7 +251,9 @@ def tem_fontes_necessarias(disponiveis: set, spec: Dict) -> bool:
     return True
 
 
-def construir_datasets(caminho_entrada: Path, diretorio_saida: Path) -> None:
+def construir_datasets(
+    caminho_entrada: Path, diretorio_saida: Path, num_professores: Optional[int] = None
+) -> None:
     logger = get_logger(__name__)
     df = carregar_dataframe(caminho_entrada)
     df, fontes_disponiveis = pre_processar(df)
@@ -276,7 +278,7 @@ def construir_datasets(caminho_entrada: Path, diretorio_saida: Path) -> None:
             logger.info(f"Dataset pulado (dados insuficientes): {nome_arquivo}")
             continue
 
-        if builder_name == "alunos_por_situacao":
+        if builder_name in ("alunos_por_situacao", "alunos_por_situacao_presencial"):
             coluna_status = resolver_coluna_status(df, fontes_disponiveis)
             gerado = builder_module.construir(df, coluna_status)
         else:
@@ -287,6 +289,16 @@ def construir_datasets(caminho_entrada: Path, diretorio_saida: Path) -> None:
             continue
         escrever_csv(gerado, diretorio_saida / nome_arquivo)
         logger.info(f"Gerado: {nome_arquivo}")
+
+    # Gera dataset de professores se o número foi fornecido
+    if num_professores is not None:
+        df_professores = pd.DataFrame(
+            {
+                "qtd_professores": [num_professores],
+            }
+        )
+        escrever_csv(df_professores, diretorio_saida / "professores.csv")
+        logger.info(f"Gerado: professores.csv ({num_professores} professores)")
 
     # Registra data/hora da importação para exibição no painel
     meta = {"atualizado_em": datetime.now().strftime("%d/%m/%Y %H:%M")}
@@ -316,6 +328,11 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
         action="store_true",
         help="Aumenta verbosidade do logging",
     )
+    parser.add_argument(
+        "--num-professores",
+        type=int,
+        help="Número de professores do campus",
+    )
     return parser.parse_args(argv)
 
 
@@ -327,7 +344,9 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
     diretorio_saida = Path(args.diretorio_saida)
     logger.info(f"Processando arquivo: {caminho_entrada}")
     logger.info(f"Saída: {diretorio_saida}")
-    construir_datasets(caminho_entrada, diretorio_saida)
+    if args.num_professores is not None:
+        logger.info(f"Número de professores: {args.num_professores}")
+    construir_datasets(caminho_entrada, diretorio_saida, args.num_professores)
 
 
 if __name__ == "__main__":

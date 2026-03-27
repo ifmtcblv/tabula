@@ -12,6 +12,7 @@ export
 PORT               ?= 8000
 DATA_INPUT         ?= data/master.xls
 DATA_OUTPUT        ?= web/datasets
+NUM_PROFESSORES    ?= 78
 BUILD_SCRIPT       := run/construir_datasets.py
 SITE_SCRIPT        := run/gerar_site.py
 IMAGE              ?= ifmtcblv/tabula
@@ -43,7 +44,7 @@ site: ## Regenera web/ (copia estáticos e gera index.html)
 	@.venv/bin/python ./$(SITE_SCRIPT)
 
 datasets: site ## Processa $(DATA_INPUT) e gera CSVs em $(DATA_OUTPUT)
-	@.venv/bin/python ./$(BUILD_SCRIPT) --in $(DATA_INPUT) --out $(DATA_OUTPUT)
+	@.venv/bin/python ./$(BUILD_SCRIPT) --in $(DATA_INPUT) --out $(DATA_OUTPUT) --num-professores $(NUM_PROFESSORES)
 
 build: datasets ## Executa site e datasets
 

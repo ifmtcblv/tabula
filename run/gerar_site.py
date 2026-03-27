@@ -16,14 +16,8 @@ TEMPLATES_DIR = BASE_DIR / ".." / "src" / "templates"
 # Adiciona diretório pai ao path para importar src
 sys.path.insert(0, str(BASE_DIR / ".."))
 
-from src.datasets_config import ESPECS_SAIDA  # noqa: E402
+from src.datasets_config import ESPECS_SAIDA, SECTIONS  # noqa: E402
 from src.logging_config import get_logger  # noqa: E402
-
-SECTIONS: Dict[str, str] = {
-    "overview": "Visão Geral",
-    "inclusao": "Inclusão & Acesso",
-    "cruzadas": "Análises Cruzadas",
-}
 
 
 def generate_site() -> None:
@@ -64,8 +58,24 @@ def generate_site() -> None:
 
     # Generate individual chart pages
     logger.info("Generating individual chart pages...")
-    template_chart = env.get_template("chart.html")
     for config in configs:
+        page_name = f"{config['key']}.html"
+        logger.info(f"  - {page_name}")
+
+        # Use custom template for criterios_orcamentarios
+        if config["key"] == "criterios_orcamentarios":
+            template_chart = env.get_template("criterios_orcamentarios.html")
+        else:
+            template_chart = env.get_template("chart.html")
+    for config in configs:
+        page_name = f"{config['key']}.html"
+        logger.info(f"  - {page_name}")
+
+        # Use custom template for criterios_orcamentarios
+        if config["key"] == "criterios_orcamentarios":
+            template_chart = env.get_template("criterios_orcamentarios.html")
+        else:
+            template_chart = env.get_template("chart.html")
         page_name = f"{config['key']}.html"
         logger.info(f"  - {page_name}")
 

@@ -82,6 +82,13 @@ SINONIMOS_COLUNAS: Dict[str, List[str]] = {
 
 COLUNAS_DATA = ["data_matricula", "data_conclusao", "data_integralizacao"]
 
+SECTIONS: Dict[str, str] = {
+    "overview": "Visão Geral",
+    "inclusao": "Inclusão & Acesso",
+    "cruzadas": "Análises Cruzadas",
+    "orcamentaria": "Indicadores",
+}
+
 ESPECS_SAIDA: Dict[str, Dict] = {
     "alunos_por_situacao.csv": {
         "builder": "alunos_por_situacao",
@@ -111,6 +118,17 @@ ESPECS_SAIDA: Dict[str, Dict] = {
             "aria_label": "Distribuição de alunos por modalidade",
         },
     },
+    "alunos_por_situacao_presencial.csv": {
+        "builder": "alunos_por_situacao_presencial",
+        "requires": ["status_simplificado", "natureza_participacao"],
+        "sources_all": ["natureza_participacao"],
+        "sources_any": [["situacao_curso", "situacao_sistema"]],
+    },
+    "modalidade_presencial.csv": {
+        "builder": "modalidade_presencial",
+        "requires": ["modalidade", "natureza_participacao"],
+        "sources_all": ["modalidade", "natureza_participacao"],
+    },
     "dist_percentual_progresso.csv": {
         "builder": "dist_percentual_progresso",
         "requires": ["bucket_progresso"],
@@ -123,6 +141,19 @@ ESPECS_SAIDA: Dict[str, Dict] = {
             "module": "./charts/progresso.js",
             "function": "renderProgressoChart",
             "aria_label": "Distribuição de progresso",
+        },
+    },
+    "criterios_orcamentarios.csv": {
+        "builder": None,
+        "frontend": {
+            "title": "Indicadores do Campus",
+            "key": "criterios_orcamentarios",
+            "section": "orcamentaria",
+            "canvas_id": "chartCriteriosOrcamentarios",
+            "module": "./charts/criterios_orcamentarios.js",
+            "function": "renderCriteriosOrcamentariosChart",
+            "aria_label": "Indicadores do campus",
+            "link": "criterios_orcamentarios.html",
         },
     },
     "turno.csv": {
@@ -266,7 +297,6 @@ ESPECS_SAIDA: Dict[str, Dict] = {
             "switchable": True,
         },
     },
-
     "natureza_turno.csv": {
         "builder": "natureza_turno",
         "requires": ["natureza_participacao", "turno"],
