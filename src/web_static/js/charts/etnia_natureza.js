@@ -7,15 +7,15 @@ import {
   renderPlaceholder,
 } from '../utils/helpers.js';
 
-const DATASET_PATH = 'datasets/natureza_escola.csv';
+const DATASET_PATH = 'datasets/etnia_natureza.csv';
 
 let chart;
 let currentGrouping = 'natureza';
 let originalRows = [];
 
 function processData(grouping) {
-  const group1 = grouping === 'natureza' ? 'natureza_participacao' : 'tipo_escola_origem';
-  const group2 = grouping === 'natureza' ? 'tipo_escola_origem' : 'natureza_participacao';
+  const group1 = grouping === 'natureza' ? 'natureza_participacao' : 'etnia_raca';
+  const group2 = grouping === 'natureza' ? 'etnia_raca' : 'natureza_participacao';
 
   const labels = [...new Set(originalRows.map(row => row[group1]))];
   const categories = [...new Set(originalRows.map(row => row[group2]))];
@@ -36,8 +36,8 @@ function processData(grouping) {
 
 function updateChart() {
   const { labels, datasets } = processData(currentGrouping);
-  const group1 = currentGrouping === 'natureza' ? 'Tipo de Escola' : 'Tipo de Escola de Origem';
-  const group2 = currentGrouping === 'natureza' ? 'Tipo de Escola de Origem' : 'Tipo de Escola';
+  const group1 = currentGrouping === 'natureza' ? 'Etnia/Raça' : 'Etnia/Raça';
+  const group2 = currentGrouping === 'natureza' ? 'Etnia/Raça' : 'Etnia/Raça';
 
   chart.data.labels = labels;
   chart.data.datasets = datasets;
@@ -46,8 +46,8 @@ function updateChart() {
   chart.update();
 }
 
-export async function renderNaturezaEscolaChart() {
-  const canvas = document.getElementById('chartNaturezaEscola');
+export async function renderEtniaNaturezaChart() {
+  const canvas = document.getElementById('chartEtniaNatureza');
   if (!canvas) {
     return;
   }
@@ -56,20 +56,19 @@ export async function renderNaturezaEscolaChart() {
     originalRows = await loadCSV(DATASET_PATH);
   } catch (error) {
     datasetMissing(DATASET_PATH);
-    renderPlaceholder(canvas, 'Sem dados para o gráfico de Presencial × Escola.');
+    renderPlaceholder(canvas, 'Sem dados para o gráfico de Presencial × Etnia/Raça.');
     return;
   }
 
   if (!originalRows.length) {
     datasetMissing(DATASET_PATH);
-    renderPlaceholder(canvas, 'Sem registros para o gráfico de Presencial × Escola.');
+    renderPlaceholder(canvas, 'Sem registros para o gráfico de Presencial × Etnia/Raça.');
     return;
   }
 
   const { labels, datasets } = processData(currentGrouping);
-  const group1 = currentGrouping === 'natureza' ? 'Presencial' : 'Tipo de Escola de Origem';
-  const group2 = currentGrouping === 'natureza' ? 'Tipo de Escola de Origem' : 'Presencial';
-
+  const group1 = currentGrouping === 'natureza' ? 'Presencial' : 'Etnia/Raça';
+  const group2 = currentGrouping === 'natureza' ? 'Etnia/Raça' : 'Presencial';
 
   const ctx = canvas.getContext('2d');
   chart = new Chart(ctx, {
@@ -116,7 +115,7 @@ export async function renderNaturezaEscolaChart() {
   const switchButton = document.getElementById('switchGroup');
   if (switchButton) {
     switchButton.addEventListener('click', () => {
-      currentGrouping = currentGrouping === 'natureza' ? 'escola' : 'natureza';
+      currentGrouping = currentGrouping === 'natureza' ? 'etnia' : 'natureza';
       updateChart();
     });
   }

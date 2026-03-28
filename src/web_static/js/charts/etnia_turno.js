@@ -1,4 +1,3 @@
-
 import { loadCSV } from '../utils/csv.js';
 import {
   datasetMissing,
@@ -7,24 +6,26 @@ import {
   renderPlaceholder,
 } from '../utils/helpers.js';
 
-const DATASET_PATH = 'datasets/natureza_escola.csv';
+const DATASET_PATH = 'datasets/etnia_turno.csv';
 
 let chart;
-let currentGrouping = 'natureza';
+let currentGrouping = 'etnia';
 let originalRows = [];
 
 function processData(grouping) {
-  const group1 = grouping === 'natureza' ? 'natureza_participacao' : 'tipo_escola_origem';
-  const group2 = grouping === 'natureza' ? 'tipo_escola_origem' : 'natureza_participacao';
+  const group1 = grouping === 'etnia' ? 'etnia_raca' : 'turno';
+  const group2 = grouping === 'etnia' ? 'turno' : 'etnia_raca';
 
-  const labels = [...new Set(originalRows.map(row => row[group1]))];
-  const categories = [...new Set(originalRows.map(row => row[group2]))];
+  const labels = [...new Set(originalRows.map((row) => row[group1]))];
+  const categories = [...new Set(originalRows.map((row) => row[group2]))].sort();
 
   const datasets = categories.map((category, index) => {
     return {
       label: category,
-      data: labels.map(label => {
-        const row = originalRows.find(r => r[group1] === label && r[group2] === category);
+      data: labels.map((label) => {
+        const row = originalRows.find(
+          (r) => r[group1] === label && r[group2] === category
+        );
         return row ? Number(row.qtd) : 0;
       }),
       backgroundColor: getColorByIndex(index),
@@ -36,40 +37,40 @@ function processData(grouping) {
 
 function updateChart() {
   const { labels, datasets } = processData(currentGrouping);
-  const group1 = currentGrouping === 'natureza' ? 'Tipo de Escola' : 'Tipo de Escola de Origem';
-  const group2 = currentGrouping === 'natureza' ? 'Tipo de Escola de Origem' : 'Tipo de Escola';
+  const group1Name =
+    currentGrouping === 'etnia'
+      ? 'Etnia/Raça'
+      : 'Turno';
 
   chart.data.labels = labels;
   chart.data.datasets = datasets;
-  chart.options.scales.y.title.text = group1;
-  chart.options.plugins.title.text = `${group1} × ${group2}`;
+  chart.options.scales.y.title.text = group1Name;
   chart.update();
 }
 
-export async function renderNaturezaEscolaChart() {
-  const canvas = document.getElementById('chartNaturezaEscola');
-  if (!canvas) {
-    return;
-  }
+export async function renderEtniaTurnoChart() {
+  const canvas = document.getElementById('chartEtniaTurno');
+  if (!canvas) return;
 
   try {
     originalRows = await loadCSV(DATASET_PATH);
   } catch (error) {
     datasetMissing(DATASET_PATH);
-    renderPlaceholder(canvas, 'Sem dados para o gráfico de Presencial × Escola.');
+    renderPlaceholder(canvas, 'Sem dados para o gráfico de Etnia/Raça × Turno.');
     return;
   }
 
   if (!originalRows.length) {
     datasetMissing(DATASET_PATH);
-    renderPlaceholder(canvas, 'Sem registros para o gráfico de Presencial × Escola.');
+    renderPlaceholder(canvas, 'Sem registros para o gráfico de Etnia/Raça × Turno.');
     return;
   }
 
   const { labels, datasets } = processData(currentGrouping);
-  const group1 = currentGrouping === 'natureza' ? 'Presencial' : 'Tipo de Escola de Origem';
-  const group2 = currentGrouping === 'natureza' ? 'Tipo de Escola de Origem' : 'Presencial';
-
+  const group1Name =
+    currentGrouping === 'etnia'
+      ? 'Etnia/Raça'
+      : 'Turno';
 
   const ctx = canvas.getContext('2d');
   chart = new Chart(ctx, {
@@ -90,14 +91,10 @@ export async function renderNaturezaEscolaChart() {
         },
         y: {
           stacked: true,
-          title: { display: true, text: group1 },
+          title: { display: true, text: group1Name },
         },
       },
       plugins: {
-        title: {
-            display: true,
-            text: `${group1} × ${group2}`
-        },
         legend: {
           position: 'top',
         },
@@ -116,7 +113,7 @@ export async function renderNaturezaEscolaChart() {
   const switchButton = document.getElementById('switchGroup');
   if (switchButton) {
     switchButton.addEventListener('click', () => {
-      currentGrouping = currentGrouping === 'natureza' ? 'escola' : 'natureza';
+      currentGrouping = currentGrouping === 'etnia' ? 'turno' : 'etnia';
       updateChart();
     });
   }

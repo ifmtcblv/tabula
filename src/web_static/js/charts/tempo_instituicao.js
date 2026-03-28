@@ -17,35 +17,16 @@ const ORDEM_FAIXAS = [
   'Mais de 4 anos',
 ];
 
-export async function renderTempoInstituicaoChart() {
-  const canvas = document.getElementById('chartTempoInstituicao');
-  if (!canvas) {
-    return;
-  }
+let chart;
+let originalRows = [];
 
-  let rows;
-  try {
-    rows = await loadCSV(DATASET_PATH);
-  } catch (error) {
-    datasetMissing(DATASET_PATH);
-    renderPlaceholder(canvas, 'Sem dados de tempo na instituição no arquivo mestre.');
-    return;
-  }
+function processData() {
+  const faixas = ORDEM_FAIXAS.filter((f) => originalRows.some((r) => r.faixa_tempo === f));
+  const naturezas = [...new Set(originalRows.map((r) => r.natureza_participacao))].sort();
 
-  if (!rows.length) {
-    datasetMissing(DATASET_PATH);
-    renderPlaceholder(canvas, 'Sem registros para o gráfico de tempo na instituição.');
-    return;
-  }
-
-  // Faixas presentes nos dados, mantendo a ordem lógica
-  const faixas = ORDEM_FAIXAS.filter((f) => rows.some((r) => r.faixa_tempo === f));
-  const naturezas = [...new Set(rows.map((r) => r.natureza_participacao))].sort();
-
-  // Totais por faixa para o tooltip
   const totaisPorFaixa = {};
   for (const faixa of faixas) {
-    totaisPorFaixa[faixa] = rows
+    totaisPorFaixa[faixa] = originalRows
       .filter((r) => r.faixa_tempo === faixa)
       .reduce((s, r) => s + (Number(r.qtd) || 0), 0);
   }
@@ -53,14 +34,39 @@ export async function renderTempoInstituicaoChart() {
   const datasets = naturezas.map((natureza, index) => ({
     label: natureza,
     data: faixas.map((faixa) => {
-      const row = rows.find((r) => r.faixa_tempo === faixa && r.natureza_participacao === natureza);
+      const row = originalRows.find((r) => r.faixa_tempo === faixa && r.natureza_participacao === natureza);
       return row ? Number(row.qtd) || 0 : 0;
     }),
     backgroundColor: getColorByIndex(index),
     borderWidth: 0,
   }));
 
-  new Chart(canvas.getContext('2d'), {
+  return { faixas, datasets, totaisPorFaixa };
+}
+
+export async function renderTempoInstituicaoChart() {
+  const canvas = document.getElementById('chartTempoInstituicao');
+  if (!canvas) {
+    return;
+  }
+
+  try {
+    originalRows = await loadCSV(DATASET_PATH);
+  } catch (error) {
+    datasetMissing(DATASET_PATH);
+    renderPlaceholder(canvas, 'Sem dados de tempo na instituição no arquivo mestre.');
+    return;
+  }
+
+  if (!originalRows.length) {
+    datasetMissing(DATASET_PATH);
+    renderPlaceholder(canvas, 'Sem registros para o gráfico de tempo na instituição.');
+    return;
+  }
+
+  const { faixas, datasets, totaisPorFaixa } = processData();
+
+  chart = new Chart(canvas.getContext('2d'), {
     type: 'bar',
     data: { labels: faixas, datasets },
     options: {

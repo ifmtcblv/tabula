@@ -15,6 +15,7 @@ def construir(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: O DataFrame do dataset.
     """
+    df = df[df["natureza_participacao"] == "Presencial"].copy()
     df_copia = df.copy()
     # Combina as colunas, tratando valores ausentes
     df_copia["transporte_combinado"] = (

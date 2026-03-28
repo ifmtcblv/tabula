@@ -1,11 +1,11 @@
-"""Constrói o dataset de situação e tipo de escola."""
+"""Constrói o dataset de forma de ingresso × situação."""
 
 import pandas as pd
 
 
 def construir(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Gera o dataset combinado de situação e tipo de escola de origem.
+    Gera o dataset cruzado de forma de ingresso e situação.
 
     Args:
         df (pd.DataFrame): O DataFrame pré-processado.
@@ -14,8 +14,9 @@ def construir(df: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: O DataFrame do dataset.
     """
     df = df[df["natureza_participacao"] == "Presencial"].copy()
+
     return (
-        df.groupby(["status_simplificado", "tipo_escola_origem"])
+        df.groupby(["forma_ingresso", "status_simplificado"])
         .size()
         .reset_index(name="qtd")
     )

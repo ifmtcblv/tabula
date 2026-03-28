@@ -13,6 +13,7 @@ def construir(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         O DataFrame do dataset com colunas Tipo_Cota, Categoria e qtd.
     """
+    df = df[df["natureza_participacao"] == "Presencial"].copy()
     if "cota_mec" not in df.columns or "cota_sistec" not in df.columns:
         return pd.DataFrame()
     mec_df = df.groupby("cota_mec").size().reset_index(name="qtd")

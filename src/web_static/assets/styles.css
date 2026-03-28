@@ -230,6 +230,28 @@ body.full-width {
   color: var(--muted-color);
 }
 
+.filtro-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.75rem 0;
+  margin-bottom: 1rem;
+}
+
+.filtro-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.filtro-toggle input {
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .page-header {
     padding: 2.5rem 0 2rem;

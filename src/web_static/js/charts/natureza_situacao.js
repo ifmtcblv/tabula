@@ -10,7 +10,7 @@ import {
 const DATASET_PATH = 'datasets/natureza_situacao.csv';
 
 let chart;
-let currentGrouping = 'natureza'; // 'natureza' or 'situacao'
+let currentGrouping = 'natureza';
 let originalRows = [];
 
 function processData(grouping) {
@@ -26,7 +26,6 @@ function processData(grouping) {
       const row = originalRows.find((r) => r[col1] === label && r[col2] === category);
       return row ? Number(row.qtd) : 0;
     }),
-    // usa cores semânticas de status quando situação é o dataset
     backgroundColor:
       grouping === 'natureza'
         ? getStatusColor(category, index)
@@ -37,7 +36,7 @@ function processData(grouping) {
 }
 
 const LABELS = {
-  natureza: 'Natureza de Participação',
+  natureza: 'Situação',
   situacao: 'Situação no Curso',
 };
 
@@ -58,13 +57,13 @@ export async function renderNaturezaSituacaoChart() {
     originalRows = await loadCSV(DATASET_PATH);
   } catch {
     datasetMissing(DATASET_PATH);
-    renderPlaceholder(canvas, 'Sem dados de natureza × situação no arquivo mestre.');
+    renderPlaceholder(canvas, 'Sem dados de Presencial × Situação no arquivo mestre.');
     return;
   }
 
   if (!originalRows.length) {
     datasetMissing(DATASET_PATH);
-    renderPlaceholder(canvas, 'Sem registros para o gráfico de Natureza × Situação.');
+    renderPlaceholder(canvas, 'Sem registros para o gráfico de Presencial × Situação.');
     return;
   }
 

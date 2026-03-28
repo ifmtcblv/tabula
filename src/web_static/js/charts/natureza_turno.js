@@ -9,7 +9,7 @@ import {
 const DATASET_PATH = 'datasets/natureza_turno.csv';
 
 let chart;
-let currentGrouping = 'natureza'; // 'natureza' or 'turno'
+let currentGrouping = 'natureza';
 let originalRows = [];
 
 function processData(grouping) {
@@ -32,7 +32,7 @@ function processData(grouping) {
 }
 
 const LABELS = {
-  natureza: 'Natureza de Participação',
+  natureza: 'Turno',
   turno: 'Turno',
 };
 
@@ -53,13 +53,13 @@ export async function renderNaturezaTurnoChart() {
     originalRows = await loadCSV(DATASET_PATH);
   } catch {
     datasetMissing(DATASET_PATH);
-    renderPlaceholder(canvas, 'Sem dados de natureza × turno no arquivo mestre.');
+    renderPlaceholder(canvas, 'Sem dados de Presencial × Turno no arquivo mestre.');
     return;
   }
 
   if (!originalRows.length) {
     datasetMissing(DATASET_PATH);
-    renderPlaceholder(canvas, 'Sem registros para o gráfico de Natureza × Turno.');
+    renderPlaceholder(canvas, 'Sem registros para o gráfico de Presencial × Turno.');
     return;
   }
 

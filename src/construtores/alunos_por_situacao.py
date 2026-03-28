@@ -14,6 +14,7 @@ def construir(df: pd.DataFrame, coluna_status: str) -> pd.DataFrame:
     Returns:
         O DataFrame do dataset com colunas Situacao e qtd.
     """
+    df = df[df["natureza_participacao"] == "Presencial"].copy()
     series = df[coluna_status].fillna("Não informado")
     agrupado = (
         series.groupby(series)
